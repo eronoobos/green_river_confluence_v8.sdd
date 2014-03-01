@@ -46,20 +46,15 @@ function widget:GetInfo()
 end
 
 -- Variables
-local displayList 		= 0
-local metalSpotWidth    = 110
-local metalSpotHeight   = 110
+local textureRotations = { -- these texture numbers only rotate this far
+	[2] = 20,
+}
+local metalSpotWidth = 110
+local metalSpotHeight = 110
 local halfWidth = math.ceil(metalSpotWidth / 2)
 local halfHeight = math.ceil(metalSpotHeight / 2)
--- worth below or equal to the key gets this texture
-local metalTextures = {
-	"maps/metal1.png",
-	"maps/metal2.png",
-	"maps/metal3.png",
-	"maps/metal4.png",
-}
-local defaultMetalTexture = "maps/metal.png"
 local mm = {}
+local displayList = 0
 -- End variables
 
 local function SortMetalValues(mSpots)
@@ -140,9 +135,10 @@ function drawPatches()
 	for i = 1, #mSpots do
 		local spot = mSpots[i]
 		local metal = spot.metal or math.ceil(spot.worth / 100) / 10
-		local tex = metalTextures[metalValues[metal]] or defaultMetalTexture
+		local texNum = metalValues[metal]
+		local tex = "maps/metal" .. texNum .. ".png"
 		gl.Texture(tex)
-		local metal_rotation = math.random(0, 360)
+		local metal_rotation = math.random(0, textureRotations[texNum] or 360)
 		gl.PushMatrix()
 		gl.Translate(0.5, 0.5, 0)
 		gl.Rotate( metal_rotation, 0, 0, 1)
